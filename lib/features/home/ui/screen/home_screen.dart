@@ -1,5 +1,8 @@
 import 'package:ecommerce/app/assets_path.dart';
+import 'package:ecommerce/features/common/data/models/category_list_controller.dart';
+import 'package:ecommerce/features/common/data/models/category_model.dart';
 import 'package:ecommerce/features/common/ui/controllers/main_bottom_nav_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/home_banner_list_controller.dart';
 import 'package:ecommerce/features/home/ui/widgets/app_bar_icon_button.dart';
 import 'package:ecommerce/features/common/widgets/category_item_widgets.dart';
 import 'package:ecommerce/features/home/ui/widgets/home_carousel_slider.dart';
@@ -7,8 +10,11 @@ import 'package:ecommerce/features/home/ui/widgets/home_section_header.dart';
 import 'package:ecommerce/features/home/ui/widgets/product_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
+import '../../../../app/app_colors.dart';
 import '../../../common/widgets/product_item_widget.dart';
+import '../../../common/widgets/simmer_animation_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +26,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchBarController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +40,17 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               ProductSearchBar(controller: _searchBarController),
               const SizedBox(height: 16),
-              HomeCarouselSlider(),
+              GetBuilder<HomeBannerListController>(
+                builder: (controller) {
+                  if (controller.inProgress) {
+                    return SizedBox(
+                      height: 180,
+                      child: SimmerAnimationWidget(),
+                    );
+                  }
+                  return HomeCarouselSlider(bannerList: controller.bannerList);
+                },
+              ),
               const SizedBox(height: 16),
               HomeSectionHeader(
                 onTap: () {
@@ -41,9 +59,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: 'Categories',
               ),
               const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: _getCategoriesList()),
+              GetBuilder<CategoryListController>(
+                builder: (controller) {
+                  if (controller.inProgress) {
+                    return SizedBox(
+                      height: 100,
+                      child: Shimmer.fromColors(
+                        baseColor: AppColors.themeColor.withAlpha(40),
+                        highlightColor: AppColors.themeColor.withAlpha(20),
+                        child: Container(
+                          color: AppColors.themeColor.withAlpha(50),
+                        ),
+                      ),
+                    );
+                  }
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _getCategoriesList(controller.categoryList),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               HomeSectionHeader(onTap: () {}, title: 'Popular'),
@@ -73,13 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Widget> _getCategoriesList() {
+  List<Widget> _getCategoriesList(List<CategoryModel> categoryListModels) {
     List<Widget> categoriesList = [];
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < categoryListModels.length; i++) {
       categoriesList.add(
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
-          child: const CategoriesItemWidget(),
+          child: CategoriesItemWidget(categoryModel: categoryListModels[i]),
         ),
       );
     }
@@ -116,3 +152,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+

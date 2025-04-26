@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:ecommerce/app/app_colors.dart';
 import 'package:ecommerce/app/app_constants.dart';
 import 'package:ecommerce/features/auth/ui/controllers/otp_verification_controller.dart';
-import 'package:ecommerce/features/auth/ui/controllers/read_profile_controller.dart';
 import 'package:ecommerce/features/auth/ui/widgets/app_logo_widgets.dart';
+import 'package:ecommerce/features/common/ui/screens/main_bottom_nav.dart';
 import 'package:ecommerce/features/common/widgets/centered_circular_progress_indicator.dart';
 import 'package:ecommerce/features/common/widgets/snackbar_message.dart';
 import 'package:flutter/material.dart';
@@ -158,8 +158,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           _otpController.text,
         );
         if (response) {
-          if (mounted) {
-            Navigator.pushNamed(context, CompleteProfileScreen.name);
+          if(_otpVerificationController.shouldNavigateCompleteProfile) {
+            if (mounted) {
+              Navigator.pushNamed(context, CompleteProfileScreen.name);
+            }
+          }else {
+            if(mounted){
+              Navigator.pushNamedAndRemoveUntil(
+                  context, MainBottomNav.name, (predicate) => false);
+            }
           }
         } else {
           if (mounted) {

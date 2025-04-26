@@ -1,9 +1,12 @@
 import 'package:ecommerce/app/app_colors.dart';
+import 'package:ecommerce/features/common/data/models/category_model.dart';
 import 'package:ecommerce/features/product/ui/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesItemWidget extends StatelessWidget {
-  const CategoriesItemWidget({super.key});
+  const CategoriesItemWidget({super.key, required this.categoryModel});
+
+  final CategoryModel categoryModel;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +26,11 @@ class CategoriesItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             padding: EdgeInsets.all(16),
-            child: Icon(Icons.computer, color: AppColors.themeColor, size: 48),
+            child: Image.network(categoryModel.categoryImg??'',width: 40,height: 40,fit: BoxFit.scaleDown,),
           ),
           const SizedBox(height: 4),
           Text(
-            'Electronics',
+            categoryModel.categoryName??'',
             style: TextStyle(
               fontSize: 16,
               color: AppColors.themeColor,
