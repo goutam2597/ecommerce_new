@@ -28,7 +28,8 @@ class BdBay extends StatelessWidget {
         } else if (settings.name == EmailVerificationScreen.name) {
           widget = const EmailVerificationScreen();
         } else if (settings.name == OtpVerificationScreen.name) {
-          widget = const OtpVerificationScreen();
+          String email = settings.arguments as String;
+          widget = OtpVerificationScreen(email: email);
         } else if (settings.name == CompleteProfileScreen.name) {
           widget = const CompleteProfileScreen();
         } else if (settings.name == MainBottomNav.name) {
