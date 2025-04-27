@@ -15,7 +15,10 @@ class CategoriesItemWidget extends StatelessWidget {
         Navigator.pushNamed(
           context,
           ProductListScreen.name,
-          arguments: 'Electronics',
+          arguments: {
+            'categoryName': categoryModel.categoryName!,
+            'categoryId': categoryModel.id!,
+          },
         );
       },
       child: Column(
@@ -26,11 +29,16 @@ class CategoriesItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             padding: EdgeInsets.all(16),
-            child: Image.network(categoryModel.categoryImg??'',width: 40,height: 40,fit: BoxFit.scaleDown,),
+            child: Image.network(
+              categoryModel.categoryImg ?? '',
+              width: 40,
+              height: 40,
+              fit: BoxFit.scaleDown,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
-            categoryModel.categoryName??'',
+            categoryModel.categoryName ?? '',
             style: TextStyle(
               fontSize: 16,
               color: AppColors.themeColor,

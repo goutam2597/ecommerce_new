@@ -1,31 +1,30 @@
 import 'package:ecommerce/app/urls.dart';
-import 'package:ecommerce/features/home/data/models/banner_list_model.dart';
+import 'package:ecommerce/features/common/data/models/product_model.dart';
+import 'package:ecommerce/features/common/data/models/products_list_model.dart';
 import 'package:ecommerce/services/network_caller/network_caller.dart';
 import 'package:get/get.dart';
 
-import '../../data/models/banner_model.dart';
-
-class HomeBannerListController extends GetxController {
+class NewProductListController extends GetxController {
   bool _inProgress = false;
   bool get inProgress => _inProgress;
 
-  BannerListModel? _bannerListModel;
+  ProductListModel? _newProductListModel;
 
-  List<BannerModel> get bannerList => _bannerListModel?.bannerList ?? [];
+  List<ProductModel> get newProductList => _newProductListModel?.productList ?? [];
 
   String? _errorMessage;
 
   String? get errorMessage => _errorMessage;
 
-  Future<bool> getHomeBannerList() async {
+  Future<bool> getNewProductList() async {
     bool isSuccess = false;
     _inProgress = true;
     update();
     final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(
-      Urls.bannerListUrl,
+      Urls.productListByRemarkUrl('new'),
     );
     if (response.isSuccess) {
-      _bannerListModel = BannerListModel.fromJson(response.responseData);
+      _newProductListModel = ProductListModel.fromJson(response.responseData);
       isSuccess = true;
     } else {
       _errorMessage = response.errorMessage;

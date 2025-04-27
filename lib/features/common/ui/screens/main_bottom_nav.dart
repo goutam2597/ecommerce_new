@@ -1,12 +1,15 @@
 import 'package:ecommerce/features/cart/ui/screens/cart_list_screen.dart';
 import 'package:ecommerce/features/common/ui/controllers/main_bottom_nav_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/new_product_list_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/popular_product_list_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/special_product_list_controller.dart';
 import 'package:ecommerce/features/home/ui/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../category/ui/screens/category_list_screen.dart';
 import '../../../home/ui/controller/home_banner_list_controller.dart';
 import '../../../whishlist/ui/screens/wish_list_screen.dart';
-import '../../data/models/category_list_controller.dart';
+import '../controllers/category_list_controller.dart';
 
 class MainBottomNav extends StatefulWidget {
   const MainBottomNav({super.key});
@@ -32,6 +35,9 @@ class _MainBottomNavState extends State<MainBottomNav> {
     super.initState();
     _homeBannerListController.getHomeBannerList();
     Get.find<CategoryListController>().getCategoryList();
+    Get.find<PopularProductListController>().getPopularProductList();
+    Get.find<SpecialProductListController>().getSpecialProductList();
+    Get.find<NewProductListController>().getNewProductList();
   }
 
   @override

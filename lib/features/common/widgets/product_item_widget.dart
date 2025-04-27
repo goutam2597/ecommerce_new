@@ -1,13 +1,13 @@
 
 import 'package:ecommerce/app/app_colors.dart';
-import 'package:ecommerce/app/assets_path.dart';
+import 'package:ecommerce/features/common/data/models/product_model.dart';
 import 'package:ecommerce/features/product/ui/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductItemWidget extends StatelessWidget {
-  const ProductItemWidget({
-    super.key,
-  });
+  const ProductItemWidget({super.key, required this.productModel,});
+
+  final ProductModel productModel;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ProductItemWidget extends StatelessWidget {
         Navigator.pushNamed(context, ProductDetailsScreen.name,arguments: 1);
       },
       child: SizedBox(
-        width: 130,
+        width: 140,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -25,7 +25,7 @@ class ProductItemWidget extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(8.0),
+                height: 120,
                 decoration: BoxDecoration(
                   color: AppColors.themeColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.only(
@@ -34,10 +34,9 @@ class ProductItemWidget extends StatelessWidget {
                   ),
                 ),
 
-                child: Image.asset(
-                  AssetsPath.appLogoPng,
-                  width: 130,
-                  height: 90,
+                child: Image.network(productModel.image??'',
+                  width: 150,
+                  fit: BoxFit.cover,
                 ),
               ),
               Padding(
@@ -50,7 +49,7 @@ class ProductItemWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Nike shoe latest edition- RF45GH',
+                      productModel.title??'',
                       maxLines: 1,
                       style: TextStyle(
                         overflow: TextOverflow.ellipsis,
@@ -64,7 +63,7 @@ class ProductItemWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$100',
+                          '\$${productModel.price}',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: AppColors.themeColor,
@@ -78,25 +77,13 @@ class ProductItemWidget extends StatelessWidget {
                               size: 18,
                             ),
                             Text(
-                              '4.5',
+                              '${productModel.star}',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.themeColor,
                               ),
                             ),
                           ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: AppColors.themeColor,
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: Icon(
-                            Icons.favorite_border,
-                            size: 16,
-                            color: Colors.white,
-                          ),
                         ),
                       ],
                     ),

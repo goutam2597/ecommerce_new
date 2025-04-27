@@ -19,4 +19,7 @@ class MainBottomNavController extends GetxController{
   void moveToCategory(){
     changedIndex(1);
   }
+  void moveToCart(){
+    changedIndex(2);
+  }
 }

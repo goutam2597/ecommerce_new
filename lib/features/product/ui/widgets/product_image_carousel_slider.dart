@@ -3,7 +3,9 @@ import 'package:ecommerce/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ProductImageCarouselSlider extends StatefulWidget {
-  const ProductImageCarouselSlider({super.key});
+  const ProductImageCarouselSlider({super.key, required this.imageUrls});
+
+  final List<String> imageUrls;
 
   @override
   State<ProductImageCarouselSlider> createState() =>
@@ -27,14 +29,14 @@ class _ProductImageCarouselSliderState
             },
           ),
           items:
-              [1, 2, 3, 4, 5].map((i) {
+              widget.imageUrls.map((url) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(color: Colors.grey),
+                      decoration: BoxDecoration(color: Colors.grey,image: DecorationImage(image: NetworkImage(url),fit: BoxFit.cover)),
                       alignment: Alignment.center,
-                      child: Text('text $i', style: TextStyle(fontSize: 16.0)),
+                      
                     );
                   },
                 );
@@ -50,7 +52,7 @@ class _ProductImageCarouselSliderState
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 0; i < 5; i++)
+                  for (int i = 0; i < widget.imageUrls.length; i++)
                     Container(
                       width: 16,
                       height: 16,

@@ -1,13 +1,18 @@
 import 'package:ecommerce/app/assets_path.dart';
-import 'package:ecommerce/features/common/data/models/category_list_controller.dart';
+import 'package:ecommerce/features/common/ui/controllers/category_list_controller.dart';
 import 'package:ecommerce/features/common/data/models/category_model.dart';
+import 'package:ecommerce/features/common/data/models/product_model.dart';
 import 'package:ecommerce/features/common/ui/controllers/main_bottom_nav_controller.dart';
 import 'package:ecommerce/features/home/ui/controller/home_banner_list_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/new_product_list_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/popular_product_list_controller.dart';
+import 'package:ecommerce/features/home/ui/controller/special_product_list_controller.dart';
 import 'package:ecommerce/features/home/ui/widgets/app_bar_icon_button.dart';
 import 'package:ecommerce/features/common/widgets/category_item_widgets.dart';
 import 'package:ecommerce/features/home/ui/widgets/home_carousel_slider.dart';
 import 'package:ecommerce/features/home/ui/widgets/home_section_header.dart';
 import 'package:ecommerce/features/home/ui/widgets/product_search_bar.dart';
+import 'package:ecommerce/features/product/ui/screens/popular_product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,7 +31,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchBarController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,25 +86,66 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              HomeSectionHeader(onTap: () {}, title: 'Popular'),
+              HomeSectionHeader(
+                onTap: () {
+                  Navigator.pushNamed(context, PopularProductScreen.name);
+                },
+                title: 'Popular',
+              ),
               const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: _getProductsList()),
+              GetBuilder<PopularProductListController>(
+                builder: (controller) {
+                  if (controller.inProgress) {
+                    return SizedBox(
+                      height: 200,
+                      child: SimmerAnimationWidget(),
+                    );
+                  }
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _getProductsList(controller.popularProductList),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               HomeSectionHeader(onTap: () {}, title: 'Special'),
               const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: _getProductsList()),
+              GetBuilder<SpecialProductListController>(
+                builder: (controller) {
+                  if (controller.inProgress) {
+                    return SizedBox(
+                      height: 200,
+                      child: SimmerAnimationWidget(),
+                    );
+                  }
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _getProductsList(controller.specialProductList),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 16),
               HomeSectionHeader(onTap: () {}, title: 'New'),
               const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: _getProductsList()),
+              GetBuilder<NewProductListController>(
+                builder: (controller) {
+                  if (controller.inProgress) {
+                    return SizedBox(
+                      height: 200,
+                      child: SimmerAnimationWidget(),
+                    );
+                  }
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _getProductsList(controller.newProductList),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -122,17 +167,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return categoriesList;
   }
 
-  List<Widget> _getProductsList() {
-    List<Widget> productsList = [];
-    for (int i = 0; i < 10; i++) {
-      productsList.add(
+  List<Widget> _getProductsList(List<ProductModel> productList) {
+    List<Widget> list = [];
+    for (int i = 0; i < productList.length; i++) {
+      list.add(
         Padding(
           padding: const EdgeInsets.only(right: 8.0),
-          child: const ProductItemWidget(),
+          child: ProductItemWidget(productModel: productList[i]),
         ),
       );
     }
-    return productsList;
+    return list;
   }
 
   AppBar _buildAppBar() {
@@ -152,4 +197,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

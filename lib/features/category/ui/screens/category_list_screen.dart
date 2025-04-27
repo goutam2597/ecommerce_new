@@ -1,4 +1,4 @@
-import 'package:ecommerce/features/common/data/models/category_list_controller.dart';
+import 'package:ecommerce/features/common/ui/controllers/category_list_controller.dart';
 import 'package:ecommerce/features/common/ui/controllers/main_bottom_nav_controller.dart';
 import 'package:ecommerce/features/common/widgets/category_item_widgets.dart';
 import 'package:ecommerce/features/common/widgets/simmer_animation_widget.dart';

@@ -2,16 +2,16 @@ import 'package:ecommerce/features/home/data/models/banner_model.dart';
 
 class BannerListModel {
   String? msg;
-  List<BannerModel>? categoryList;
+  List<BannerModel>? bannerList;
 
-  BannerListModel({this.msg, this.categoryList});
+  BannerListModel({this.msg, this.bannerList});
 
   BannerListModel.fromJson(Map<String, dynamic> json) {
     msg = json['msg'];
     if (json['data'] != null) {
-      categoryList = <BannerModel>[];
+      bannerList = <BannerModel>[];
       json['data'].forEach((v) {
-        categoryList!.add(BannerModel.fromJson(v));
+        bannerList!.add(BannerModel.fromJson(v));
       });
     }
   }
@@ -19,8 +19,8 @@ class BannerListModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['msg'] = msg;
-    if (categoryList != null) {
-      data['data'] = categoryList!.map((v) => v.toJson()).toList();
+    if (bannerList != null) {
+      data['data'] = bannerList!.map((v) => v.toJson()).toList();
     }
     return data;
   }

@@ -8,7 +8,7 @@ class ColorPickerWidget extends StatefulWidget {
     required this.onColorSelected,
   });
 
-  final List<String> colors; // Example: ["#FF0000", "#00FF00", "#0000FF"]
+  final List<String> colors; // Example: ["red", "green", "blue"]
   final Function(String) onColorSelected;
 
   @override
@@ -27,26 +27,26 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
   }
 
   List<Widget> _buildColorItems() {
-    return widget.colors.map((color) {
+    return widget.colors.map((colorName) {
       return _buildColorItem(
-        hexColor: color,
+        colorName: colorName,
         onTap: () {
           setState(() {
-            _selectedColor = color;
+            _selectedColor = colorName;
           });
-          widget.onColorSelected(color);
+          widget.onColorSelected(colorName);
         },
-        isSelected: _selectedColor == color,
+        isSelected: _selectedColor == colorName,
       );
     }).toList();
   }
 
   Widget _buildColorItem({
-    required String hexColor,
+    required String colorName,
     required VoidCallback onTap,
     required bool isSelected,
   }) {
-    Color parsedColor = _parseColor(hexColor);
+    Color parsedColor = _parseColorName(colorName);
 
     return GestureDetector(
       onTap: onTap,
@@ -69,9 +69,37 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
     );
   }
 
-  Color _parseColor(String hexColor) {
-    String hex = hexColor.toUpperCase().replaceAll("#", "");
-    if (hex.length == 6) hex = "FF$hex"; // add opacity if not present
-    return Color(int.parse(hex, radix: 16));
+  Color _parseColorName(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case 'red':
+        return Colors.red;
+      case 'green':
+        return Colors.green;
+      case 'blue':
+        return Colors.blue;
+      case 'yellow':
+        return Colors.yellow;
+      case 'black':
+        return Colors.black;
+      case 'white':
+        return Colors.white;
+      case 'orange':
+        return Colors.orange;
+      case 'pink':
+        return Colors.pink;
+      case 'purple':
+        return Colors.purple;
+      case 'brown':
+        return Colors.brown;
+      case 'grey':
+      case 'gray':
+        return Colors.grey;
+      case 'cyan':
+        return Colors.cyan;
+      case 'teal':
+        return Colors.teal;
+      default:
+        return Colors.grey; // fallback color if name not found
+    }
   }
 }
