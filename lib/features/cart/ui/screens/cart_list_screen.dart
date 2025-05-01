@@ -1,3 +1,4 @@
+import 'package:ecommerce/features/product/ui/controllers/cart_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../app/app_colors.dart';
@@ -14,6 +15,14 @@ class CartListScreen extends StatefulWidget {
 
 class _CartListScreenState extends State<CartListScreen> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<CartListController>().getCartList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return PopScope(
@@ -27,18 +36,29 @@ class _CartListScreenState extends State<CartListScreen> {
             icon: Icon(Icons.arrow_back_ios),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return CartProductItemWidget();
-                },
-              ),
-            ),
-            _buildPriceAndCheckoutSection(textTheme),
-          ],
+        body: GetBuilder<CartListController>(
+          builder: (controller) {
+            if (controller.inProgress) {
+              {
+                return Center(child: CircularProgressIndicator());
+              }
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: controller.cartListModel.data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return CartProductItemWidget(
+                        cartData: controller.cartListModel.data![index],
+                      );
+                    },
+                  ),
+                ),
+                _buildPriceAndCheckoutSection(textTheme),
+              ],
+            );
+          },
         ),
       ),
     );

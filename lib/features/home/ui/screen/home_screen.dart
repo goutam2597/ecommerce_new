@@ -36,118 +36,133 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              const SizedBox(height: 16),
-              ProductSearchBar(controller: _searchBarController),
-              const SizedBox(height: 16),
-              GetBuilder<HomeBannerListController>(
-                builder: (controller) {
-                  if (controller.inProgress) {
-                    return SizedBox(
-                      height: 180,
-                      child: SimmerAnimationWidget(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          Get.find<CategoryListController>().getCategoryList();
+          Get.find<HomeBannerListController>().getHomeBannerList();
+          Get.find<PopularProductListController>().getPopularProductList();
+          Get.find<SpecialProductListController>().getSpecialProductList();
+          Get.find<NewProductListController>().getNewProductList();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                ProductSearchBar(controller: _searchBarController),
+                const SizedBox(height: 16),
+                GetBuilder<HomeBannerListController>(
+                  builder: (controller) {
+                    if (controller.inProgress) {
+                      return SizedBox(
+                        height: 180,
+                        child: SimmerAnimationWidget(),
+                      );
+                    }
+                    return HomeCarouselSlider(
+                      bannerList: controller.bannerList,
                     );
-                  }
-                  return HomeCarouselSlider(bannerList: controller.bannerList);
-                },
-              ),
-              const SizedBox(height: 16),
-              HomeSectionHeader(
-                onTap: () {
-                  Get.find<MainBottomNavController>().moveToCategory();
-                },
-                title: 'Categories',
-              ),
-              const SizedBox(height: 8),
-              GetBuilder<CategoryListController>(
-                builder: (controller) {
-                  if (controller.inProgress) {
-                    return SizedBox(
-                      height: 100,
-                      child: Shimmer.fromColors(
-                        baseColor: AppColors.themeColor.withAlpha(40),
-                        highlightColor: AppColors.themeColor.withAlpha(20),
-                        child: Container(
-                          color: AppColors.themeColor.withAlpha(50),
+                  },
+                ),
+                const SizedBox(height: 16),
+                HomeSectionHeader(
+                  onTap: () {
+                    Get.find<MainBottomNavController>().moveToCategory();
+                  },
+                  title: 'Categories',
+                ),
+                const SizedBox(height: 8),
+                GetBuilder<CategoryListController>(
+                  builder: (controller) {
+                    if (controller.inProgress) {
+                      return SizedBox(
+                        height: 100,
+                        child: Shimmer.fromColors(
+                          baseColor: AppColors.themeColor.withAlpha(40),
+                          highlightColor: AppColors.themeColor.withAlpha(20),
+                          child: Container(
+                            color: AppColors.themeColor.withAlpha(50),
+                          ),
+                        ),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _getCategoriesList(controller.categoryList),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                HomeSectionHeader(
+                  onTap: () {
+                    Navigator.pushNamed(context, PopularProductScreen.name);
+                  },
+                  title: 'Popular',
+                ),
+                const SizedBox(height: 8),
+                GetBuilder<PopularProductListController>(
+                  builder: (controller) {
+                    if (controller.inProgress) {
+                      return SizedBox(
+                        height: 200,
+                        child: SimmerAnimationWidget(),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _getProductsList(
+                          controller.popularProductList,
                         ),
                       ),
                     );
-                  }
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _getCategoriesList(controller.categoryList),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              HomeSectionHeader(
-                onTap: () {
-                  Navigator.pushNamed(context, PopularProductScreen.name);
-                },
-                title: 'Popular',
-              ),
-              const SizedBox(height: 8),
-              GetBuilder<PopularProductListController>(
-                builder: (controller) {
-                  if (controller.inProgress) {
-                    return SizedBox(
-                      height: 200,
-                      child: SimmerAnimationWidget(),
+                  },
+                ),
+                const SizedBox(height: 16),
+                HomeSectionHeader(onTap: () {}, title: 'Special'),
+                const SizedBox(height: 8),
+                GetBuilder<SpecialProductListController>(
+                  builder: (controller) {
+                    if (controller.inProgress) {
+                      return SizedBox(
+                        height: 200,
+                        child: SimmerAnimationWidget(),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _getProductsList(
+                          controller.specialProductList,
+                        ),
+                      ),
                     );
-                  }
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _getProductsList(controller.popularProductList),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              HomeSectionHeader(onTap: () {}, title: 'Special'),
-              const SizedBox(height: 8),
-              GetBuilder<SpecialProductListController>(
-                builder: (controller) {
-                  if (controller.inProgress) {
-                    return SizedBox(
-                      height: 200,
-                      child: SimmerAnimationWidget(),
+                  },
+                ),
+                const SizedBox(height: 16),
+                HomeSectionHeader(onTap: () {}, title: 'New'),
+                const SizedBox(height: 8),
+                GetBuilder<NewProductListController>(
+                  builder: (controller) {
+                    if (controller.inProgress) {
+                      return SizedBox(
+                        height: 200,
+                        child: SimmerAnimationWidget(),
+                      );
+                    }
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: _getProductsList(controller.newProductList),
+                      ),
                     );
-                  }
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _getProductsList(controller.specialProductList),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              HomeSectionHeader(onTap: () {}, title: 'New'),
-              const SizedBox(height: 8),
-              GetBuilder<NewProductListController>(
-                builder: (controller) {
-                  if (controller.inProgress) {
-                    return SizedBox(
-                      height: 200,
-                      child: SimmerAnimationWidget(),
-                    );
-                  }
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _getProductsList(controller.newProductList),
-                    ),
-                  );
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -184,14 +199,14 @@ class _HomeScreenState extends State<HomeScreen> {
     return AppBar(
       title: Image.asset(AssetsPath.longLogoPng, width: 100),
       actions: [
-        AppBarIconButton(icon: Icons.person_2_outlined, onTap: () {}),
-        const SizedBox(width: 8),
-        AppBarIconButton(icon: Icons.wifi_calling_3_outlined, onTap: () {}),
-        const SizedBox(width: 8),
         AppBarIconButton(
           icon: Icons.notifications_active_outlined,
           onTap: () {},
         ),
+        const SizedBox(width: 8),
+        AppBarIconButton(icon: Icons.wifi_calling_3_outlined, onTap: () {}),
+        const SizedBox(width: 8),
+        AppBarIconButton(icon: Icons.person_2_outlined, onTap: () {}),
         const SizedBox(width: 16),
       ],
     );

@@ -15,7 +15,7 @@ class AppBarIconButton extends StatelessWidget {
       child: CircleAvatar(
         backgroundColor: Colors.grey.shade100,
         radius: 16,
-        child: Icon(icon, size: 24, color: Colors.grey.shade600),
+        child: Icon(icon, size: 28, color: Colors.grey.shade600),
       ),
     );
   }

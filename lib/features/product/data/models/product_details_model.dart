@@ -61,4 +61,5 @@ class ProductDetails {
     product =
         json['product'] != null ? ProductModel.fromJson(json['product']) : null;
   }
+
 }

@@ -1,11 +1,13 @@
+import 'package:ecommerce/features/product/data/models/cart_list_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_colors.dart';
-import '../../../../app/assets_path.dart';
 import '../../../common/widgets/product_qty_inc_dec_button.dart';
 
 class CartProductItemWidget extends StatelessWidget {
-  const CartProductItemWidget({super.key});
+  final CartData cartData;
+
+  const CartProductItemWidget({super.key, required this.cartData});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +20,8 @@ class CartProductItemWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
         child: Row(
           children: [
-            Image.asset(
-              AssetsPath.appLogoPng,
+            Image.network(
+              cartData.product?.image ?? '',
               height: 90,
               width: 90,
               fit: BoxFit.scaleDown,
@@ -36,7 +38,7 @@ class CartProductItemWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Nike Shoe - AK51 ew year deal',
+                              cartData.product?.title ?? '',
                               maxLines: 1,
                               style: textTheme.bodyLarge?.copyWith(
                                 overflow: TextOverflow.ellipsis,
@@ -44,9 +46,9 @@ class CartProductItemWidget extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Text('Color:Red'),
+                                Text('Color:${cartData.color ?? ''}'),
                                 SizedBox(width: 8),
-                                Text('Sze:XL'),
+                                Text('Size:${cartData.size}'),
                               ],
                             ),
                           ],
@@ -60,7 +62,7 @@ class CartProductItemWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$100',
+                        '\$${cartData.product?.price ?? ''}',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,

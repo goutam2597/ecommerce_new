@@ -7,8 +7,10 @@ class NetworkResponse {
   final int statusCode;
   final dynamic responseData;
   final String errorMessage;
+  final Map<String, dynamic>? responseJson;
 
   NetworkResponse({
+    this.responseJson,
     required this.isSuccess,
     required this.statusCode,
     this.responseData,
@@ -19,7 +21,7 @@ class NetworkResponse {
 class NetworkCaller {
   final Logger _logger = Logger();
 
-  Future<NetworkResponse> getRequest(String url,{String? accessToken}) async {
+  Future<NetworkResponse> getRequest(String url, {String? accessToken}) async {
     try {
       Uri uri = Uri.parse(url);
       Map<String, String> headers = {'Content-Type': 'application/json'};
@@ -27,7 +29,7 @@ class NetworkCaller {
         headers['token'] = accessToken;
       }
       _logRequest(url);
-      Response response = await get(uri,headers: headers);
+      Response response = await get(uri, headers: headers);
       _logResponse(url, response.statusCode, response.headers, response.body);
 
       final decoded = jsonDecode(response.body);
@@ -37,6 +39,7 @@ class NetworkCaller {
           isSuccess: true,
           statusCode: response.statusCode,
           responseData: decoded,
+          responseJson: decoded, // ✅ Added
         );
       } else {
         return NetworkResponse(
@@ -55,10 +58,7 @@ class NetworkCaller {
     }
   }
 
-  Future<NetworkResponse> postRequest(
-      String url, [
-        Map<String, dynamic>? body,
-      ]) async {
+  Future<NetworkResponse> postRequest(String url, [Map<String, dynamic>? body]) async {
     try {
       Uri uri = Uri.parse(url);
       Map<String, String> headers = {'Content-Type': 'application/json'};
@@ -77,6 +77,7 @@ class NetworkCaller {
           isSuccess: true,
           statusCode: response.statusCode,
           responseData: decoded,
+          responseJson: decoded, // ✅ Added
         );
       } else {
         return NetworkResponse(
@@ -99,13 +100,7 @@ class NetworkCaller {
     _logger.i('🔍 REQUEST:\nURL => $url\nHEADERS => $headers\nBODY => $body');
   }
 
-  void _logResponse(
-      String url,
-      int statusCode,
-      Map<String, String>? headers,
-      String body, [
-        String? errorMessage,
-      ]) {
+  void _logResponse(String url, int statusCode, Map<String, String>? headers, String body, [String? errorMessage]) {
     if (errorMessage != null) {
       _logger.e('ERROR:\nURL => $url\nError Message => $errorMessage');
     } else {
